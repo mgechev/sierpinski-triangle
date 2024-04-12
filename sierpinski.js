@@ -8,6 +8,7 @@
  */
 
 const canvas = document.getElementById('fractal');
+const context = canvas.getContext('2d');
 const width = canvas.width;
 const height = canvas.height;
 const maxIterations = 100_000;
@@ -35,12 +36,10 @@ const drawTriangle = (context, width, height) => {
 };
 
 const randomPointInTriangle = (p1, p2, p3) => {
-  // Generate random weights for each point
   const weight1 = Math.random();
   const weight2 = Math.random();
   const weight3 = 1 - weight1 - weight2;
 
-  // Calculate new point coordinates based on weights and original points
   const x = weight1 * p1.x + weight2 * p2.x + weight3 * p3.x;
   const y = weight1 * p1.y + weight2 * p2.y + weight3 * p3.y;
 
@@ -53,8 +52,7 @@ const findMiddlePoint = (a, b) => {
   return { x, y };
 };
 
-function *getSierpinskiTriangle(canvas, width, height, maxIterations) {
-  const context = canvas.getContext('2d');
+function *getSierpinskiTriangle(context, width, height, maxIterations) {
   const triangle = drawTriangle(context, width, height);
 
   for (const point of triangle) {
@@ -70,15 +68,11 @@ function *getSierpinskiTriangle(canvas, width, height, maxIterations) {
   }
 };
 
-
 async function render(context, sierpinskiGenerator) {
-  let counter = 0;
   for (const point of sierpinskiGenerator) {
-    counter++;
-    if (!point) return;
     drawPoint(context, point);
   }
 }
 
-const sierpinskiGenerator = getSierpinskiTriangle(canvas, width, height, maxIterations);
-render(canvas.getContext('2d'), sierpinskiGenerator);
+const sierpinskiGenerator = getSierpinskiTriangle(context, width, height, maxIterations);
+render(context, sierpinskiGenerator);
